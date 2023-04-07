@@ -1,4 +1,4 @@
-let gameOver = false;
+let gameOver = true;
 
 const game = (function() {
     let gameBoard = []
@@ -21,10 +21,11 @@ const game = (function() {
             choice : 
             for (i = 1; i <= 9; i++){
                 const posChoice = Math.floor(Math.random() * 9)
-                if(gameBoard[posChoice] === undefined) {
-                    gameBoard[posChoice] = 'O'
+                if ( gameBoard[posChoice] === undefined ) {
+                    const getPlayer = player.currentPlayer()
+                    console.log(getPlayer)
+                    gameBoard[posChoice] = getPlayer
                     finishMove()
-                    player.currentPlayer()
                     displayController.toggle()
                     break choice
                 }}
@@ -64,12 +65,12 @@ const game = (function() {
         if(result) {
             gameOver = true;
             displayController.toggle()
-            displayController.gameOver(result)
+            displayController.gameOverScreen(result)
         }
         return result
     }
 
-    const restart = function() {
+    const start = function() {
         gameBoard = []
         displayController.update()
         displayController.toggle()
@@ -79,19 +80,14 @@ const game = (function() {
 
     return {
         makeMove,
-        restart
+        compMove,
+        start
         }
 })();
 
 
 
 const player = (function(){
-    // const playerChoice = document.querySelectorAll('button');
-    // playerChoice.forEach(button => {
-    //     button.addEventListener('click', (e) => {
-    //         if(e.target.value = 'x') 
-    //     })
-    // })
     let playerSwitch = true;
     const currentPlayer = function(){
         if(gameOver) playerSwitch = false;
@@ -110,13 +106,12 @@ const displayController = (function() {
         for (let i = 1; i <= 9; i++) {
             const field = document.createElement('div');
             field.classList.add(`field${i}`);
-            field.addEventListener('click', atClick)
             board.append(field);
         }
     })()
 
     const fields = document.querySelectorAll('div[class^="field');
-    let fieldSwitch = true;
+    let fieldSwitch = false;
 
     function atClick(event) {
         const getPlayer = player.currentPlayer()
@@ -148,24 +143,35 @@ const displayController = (function() {
         fieldSwitch = !fieldSwitch;
     }
 
-    // variables for gameOver
-    const resultDiv = document.querySelector('.endScreen .result');
-        const endScreen = document.querySelector('.endScreen')
-        const playAgainBtn = document.querySelector('button.playAgain') 
-        playAgainBtn.addEventListener('click', () => {
-            game.restart()
-            endScreen.classList.toggle('active')
-        })
-        
-    const gameOver = function(result) {      
-        resultDiv.textContent = result;
-        endScreen.classList.toggle('active')
+    // variables for startGame
+
+    const startScreen = document.querySelector('.startScreen')
+    const h1 = document.querySelector('.startScreen h1')
+    const btnX = document.querySelector('button#btnX')
+    const btnO = document.querySelector('button#btnO')
+    const toggleMenu = function() {
+        startScreen.classList.toggle('active')
+        board.classList.toggle('blur')
+    }
+    btnX.addEventListener('click', ()=> {
+        toggleMenu();
+        game.start()
+    })
+    btnO.addEventListener('click', () => {
+        toggleMenu();
+        game.start()
+        game.compMove();
+    })
+
+    const gameOverScreen = function(result) {      
+        h1.textContent = result;
+        toggleMenu()
     } 
 
     return {
         update,
         toggle, 
-        gameOver
+        gameOverScreen
     }
 })();
 
