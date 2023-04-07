@@ -9,7 +9,6 @@
 }
 
 .gameBoard {
-    border: solid 1px black;
     width: 375px;
     height:375px;
     display: grid;
@@ -24,6 +23,28 @@
 
 div[class^="field"] {
     border: solid 1px black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0px;
+    transition: all 350ms ease-in-out;
+}
+
+div[class^="field"].active {
+    font-size: 100px;
+}
+
+div.field0, div.field1, div.field2 {
+    border-top: 0;
+}
+div.field6, div.field7, div.field8 {
+    border-bottom: 0;
+}
+div.field0, div.field3, div.field6 {
+    border-left: 0;
+}
+div.field2, div.field5, div.field8 {
+    border-right: 0;
 }
 
 .startScreen {

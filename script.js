@@ -4,13 +4,12 @@ const game = (function() {
     let gameBoard = []
 
     const makeMove = function(curPlayer, pos) {
-        if(gameBoard[pos -1]) {
+        if(gameBoard[pos]) {
             player.currentPlayer()
             return;
         }
-        gameBoard[pos - 1] = curPlayer;
-        finishMove()
-        compMove()
+        gameBoard[pos] = curPlayer;
+        finishMove(pos)
     }
 
     const compMove = function() {
@@ -23,17 +22,15 @@ const game = (function() {
                 const posChoice = Math.floor(Math.random() * 9)
                 if ( gameBoard[posChoice] === undefined ) {
                     const getPlayer = player.currentPlayer()
-                    console.log(getPlayer)
-                    gameBoard[posChoice] = getPlayer
-                    finishMove()
+                    makeMove(getPlayer, posChoice)
                     displayController.toggle()
                     break choice
                 }}
         },1000)
     }
 
-    const finishMove = function() {
-        displayController.update(gameBoard)
+    const finishMove = function(pos) {
+        displayController.update(gameBoard, pos)
         isGameOver()
     }
 
@@ -72,7 +69,7 @@ const game = (function() {
 
     const start = function() {
         gameBoard = []
-        displayController.update()
+        displayController.update(gameBoard)
         displayController.toggle()
         player.currentPlayer()
         gameOver = false
@@ -103,7 +100,7 @@ const player = (function(){
 const displayController = (function() {
     const board = document.querySelector('.gameBoard');
     const drawFields = (function(){
-        for (let i = 1; i <= 9; i++) {
+        for (let i = 0; i < 9; i++) {
             const field = document.createElement('div');
             field.classList.add(`field${i}`);
             board.append(field);
@@ -117,16 +114,15 @@ const displayController = (function() {
         const getPlayer = player.currentPlayer()
         const pos = parseInt(event.target.className[5])
         game.makeMove(getPlayer, pos)
+        game.compMove()
     }
 
-    const update = function(gameBoard) {
+    const update = function(gameBoard, lastPos) {
+        if(lastPos >= 0) fields[lastPos].classList.add('active')
         fields.forEach(field => {
-            if(gameBoard === undefined){
-                field.textContent = ''
-                return
-            }
+            if(gameOver) field.classList.remove('active')
             const pos = parseInt(field.className[5])
-            field.textContent = gameBoard[pos - 1]
+            field.textContent = gameBoard[pos]
         })
     }
 
@@ -153,6 +149,9 @@ const displayController = (function() {
         startScreen.classList.toggle('active')
         board.classList.toggle('blur')
     }
+
+    toggleMenu();
+
     btnX.addEventListener('click', ()=> {
         toggleMenu();
         game.start()
