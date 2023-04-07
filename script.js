@@ -6,6 +6,22 @@ const game = (function() {
             return;
         }
         gameBoard[pos - 1] = curPlayer;
+        finishMove()
+        setTimeout(compMove,1000)
+    }
+    const compMove = function() {
+        choice : 
+        while (true){
+            const posChoice = Math.floor(Math.random() * 9)
+            if(gameBoard[posChoice] === undefined) {
+                gameBoard[posChoice] = 'O'
+                finishMove()
+                player.currentPlayer()
+                break choice
+            } 
+        }
+    }
+    const finishMove = function() {
         displayController.update(gameBoard)
         isGameOver()
     }
@@ -35,11 +51,17 @@ const game = (function() {
         };
     };
     return {
-        makeMove
+        makeMove,
     }
 })();
 
 const player = (function(){
+    // const playerChoice = document.querySelectorAll('button');
+    // playerChoice.forEach(button => {
+    //     button.addEventListener('click', (e) => {
+    //         if(e.target.value = 'x') 
+    //     })
+    // })
     let playerSwitch = true;
     const currentPlayer = function(){
         const player = playerSwitch ? 'X' : 'O';
