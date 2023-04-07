@@ -1,6 +1,8 @@
+let gameOver = false;
+
 const game = (function() {
-    const gameBoard = []
-    let gameOver = false;
+    let gameBoard = []
+
     const makeMove = function(curPlayer, pos) {
         if(gameBoard[pos -1]) {
             player.currentPlayer()
@@ -10,8 +12,10 @@ const game = (function() {
         finishMove()
         compMove()
     }
+
     const compMove = function() {
         if(gameOver) return
+
         displayController.toggle()
         setTimeout( ()=> {
             choice : 
@@ -26,11 +30,12 @@ const game = (function() {
                 }}
         },1000)
     }
+
     const finishMove = function() {
         displayController.update(gameBoard)
-        const gameEnd = isGameOver()
-        if(gameEnd) alert(gameEnd)
+        isGameOver()
     }
+
     const isGameOver = function(){
         const threes = [[gameBoard[0], gameBoard[1], gameBoard[2]],
                         [gameBoard[3], gameBoard[4], gameBoard[5]],
@@ -51,24 +56,34 @@ const game = (function() {
         // Check for draw
         if(threes.every(row => {
             return row[0] != row[1] && row[0] != undefined && row[1] != undefined || 
-                    row[0] != row[2] && row[0] != undefined && row[2] != undefined || 
-                    row[1] != row[2] && row[1] != undefined && row[2] != undefined
+                   row[0] != row[2] && row[0] != undefined && row[2] != undefined || 
+                   row[1] != row[2] && row[1] != undefined && row[2] != undefined
             })){
             result = 'DRAW'
         }
         if(result) {
             gameOver = true;
             displayController.toggle()
+            displayController.gameOver(result)
         }
         return result
     }
 
+    const restart = function() {
+        gameBoard = []
+        displayController.update()
+        displayController.toggle()
+        player.currentPlayer()
+        gameOver = false
+    }
 
     return {
         makeMove,
-        gameOver
-    }
+        restart
+        }
 })();
+
+
 
 const player = (function(){
     // const playerChoice = document.querySelectorAll('button');
@@ -79,6 +94,7 @@ const player = (function(){
     // })
     let playerSwitch = true;
     const currentPlayer = function(){
+        if(gameOver) playerSwitch = false;
         const player = playerSwitch ? 'X' : 'O';
         playerSwitch = !playerSwitch;
         return player
@@ -86,8 +102,10 @@ const player = (function(){
     return {currentPlayer}
 })()
 
+
+
 const displayController = (function() {
-    const board = document.querySelector('.gameboard');
+    const board = document.querySelector('.gameBoard');
     const drawFields = (function(){
         for (let i = 1; i <= 9; i++) {
             const field = document.createElement('div');
@@ -96,19 +114,27 @@ const displayController = (function() {
             board.append(field);
         }
     })()
+
     const fields = document.querySelectorAll('div[class^="field');
     let fieldSwitch = true;
+
     function atClick(event) {
         const getPlayer = player.currentPlayer()
         const pos = parseInt(event.target.className[5])
         game.makeMove(getPlayer, pos)
     }
+
     const update = function(gameBoard) {
         fields.forEach(field => {
+            if(gameBoard === undefined){
+                field.textContent = ''
+                return
+            }
             const pos = parseInt(field.className[5])
             field.textContent = gameBoard[pos - 1]
         })
     }
+
     const toggle = function() {
         if(fieldSwitch){
             fields.forEach (field => {
@@ -121,9 +147,25 @@ const displayController = (function() {
         }
         fieldSwitch = !fieldSwitch;
     }
+
+    // variables for gameOver
+    const resultDiv = document.querySelector('.endScreen .result');
+        const endScreen = document.querySelector('.endScreen')
+        const playAgainBtn = document.querySelector('button.playAgain') 
+        playAgainBtn.addEventListener('click', () => {
+            game.restart()
+            endScreen.classList.toggle('active')
+        })
+        
+    const gameOver = function(result) {      
+        resultDiv.textContent = result;
+        endScreen.classList.toggle('active')
+    } 
+
     return {
         update,
-        toggle
+        toggle, 
+        gameOver
     }
 })();
 

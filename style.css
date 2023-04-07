@@ -7,7 +7,7 @@
     justify-content: center;
 }
 
-.gameboard {
+.gameBoard {
     border: solid 1px black;
     width: 375px;
     height:375px;
@@ -18,4 +18,12 @@
 
 div[class^="field"] {
     border: solid 1px black;
+}
+
+.endScreen {
+    transform: scale(0);
+}
+
+.active {
+    transform: scale(1);
 }
