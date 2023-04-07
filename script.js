@@ -56,7 +56,10 @@ const game = (function() {
             })){
             result = 'DRAW'
         }
-        if(result) gameOver = true;
+        if(result) {
+            gameOver = true;
+            displayController.toggle()
+        }
         return result
     }
 
@@ -96,7 +99,6 @@ const displayController = (function() {
     const fields = document.querySelectorAll('div[class^="field');
     let fieldSwitch = true;
     function atClick(event) {
-        if(game.gameOver) console.log('wazup?');
         const getPlayer = player.currentPlayer()
         const pos = parseInt(event.target.className[5])
         game.makeMove(getPlayer, pos)
