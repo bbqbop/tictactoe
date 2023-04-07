@@ -5,6 +5,7 @@
 .wrapper {
     display: flex;
     justify-content: center;
+    position: relative;
 }
 
 .gameBoard {
@@ -14,14 +15,22 @@
     display: grid;
     grid-template-rows: repeat(3, 125px);
     grid-template-columns: repeat(3, 125px);
+    transition: all 350ms ease-in-out;
+}
+
+.blur {
+    filter: blur(5px);
 }
 
 div[class^="field"] {
     border: solid 1px black;
 }
 
-.endScreen {
+.startScreen {
+    position: absolute;
+    margin-left: auto;
     transform: scale(0);
+    transition: all 350ms ease-in-out;
 }
 
 .active {
