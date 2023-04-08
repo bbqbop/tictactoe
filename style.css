@@ -52,6 +52,10 @@ div.field2, div.field5, div.field8 {
     border-right: 0;
 }
 
+.blue {
+    color: var(--blue);
+}
+
 .startScreen {
     position: absolute;
     margin-left: auto;

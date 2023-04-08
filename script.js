@@ -168,9 +168,17 @@ const displayController = (function() {
     }
 
     const update = function(gameBoard, lastPos) {
-        if(lastPos >= 0) fields[lastPos].classList.add('active')
+        if(lastPos >= 0) {
+            fields[lastPos].classList.add('active')
+            if(gameBoard[lastPos] === user){
+                fields[lastPos].classList.add('blue')
+            }
+        }
         fields.forEach(field => {
-            if(gameOver) field.classList.remove('active')
+            if(gameOver) {
+                field.classList.remove('active')
+                field.classList.remove('blue')
+            }
             const pos = parseInt(field.className[5])
             field.textContent = gameBoard[pos]
         })
