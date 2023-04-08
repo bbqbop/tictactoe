@@ -11,6 +11,7 @@
     display: flex;
     justify-content: center;
     position: relative;
+    top: 25px;
 }
 
 .gameBoard {
@@ -32,7 +33,7 @@ div[class^="field"] {
     justify-content: center;
     align-items: center;
     font-size: 0px;
-    transition: all 350ms ease-in-out;
+    transition: all 350ms;
 }
 
 div[class^="field"].active {
@@ -59,6 +60,7 @@ div.field2, div.field5, div.field8 {
 .startScreen {
     position: absolute;
     margin-left: auto;
+    top: 15px;
     transform: scale(0);
     transition: all 350ms ease-in-out;
 
@@ -75,9 +77,10 @@ div.field2, div.field5, div.field8 {
     font-size: 2rem;
 }
 
-h1::first-letter{
+.startScreen h1::first-letter{
     color: #2196F3;
     font-size: 3rem;
+    text-shadow: 3px 3px 0 #ccc, 3px -3px 0 #ccc, -3px -3px #ccc, -3px 3px #ccc;
 }
 
 .menu1 {
@@ -186,4 +189,17 @@ h1::first-letter{
   
   .slider.round:before {
     border-radius: 50%;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: -1.5rem;
+    left: calc(50% - calc(375px/2));
+    opacity: 0.3;
+    color: #ccc;
+    transition: all 400ms;
+  }
+
+  .footer:hover {
+    color: var(--blue);
   }
