@@ -1,4 +1,5 @@
 let gameOver = true;
+let hardSwitch;
 
 const game = (function() {
     let gameBoard = []
@@ -16,26 +17,35 @@ const game = (function() {
     const compMove = function() {
         if(gameOver) return
         displayController.toggle()
+        const getPlayer = player.currentPlayer()
         let posChoice;
         setTimeout( ()=> {
-            if(threes){
-                threes.forEach(row => {
-                    if(row[0] === row[1] && row[0] !== undefined && row[1] !== undefined){
-                        posChoice = row[2]
-                        console.log(row[2])
-                        return
+            if(threes && hardSwitch){
+                Object.entries(threes).forEach(row => {
+                    if(row[1][0] === row[1][1] && row[1][2] === undefined && row[1][0] !== undefined && row[1][1] !== undefined){
+                        posChoice = parseInt(row[0][3])
+                        console.log(row, posChoice)
+                    }
+                    if(row[1][0] === row[1][2] && row[1][1] === undefined && row[1][0] !== undefined && row[1][2] !== undefined){
+                        posChoice = parseInt(row[0][2])
+                        console.log(row, posChoice)
+                    }
+                    if(row[1][1] === row[1][2] && row[1][0] === undefined && row[1][1] !== undefined && row[1][2] !== undefined){
+                        posChoice = parseInt(row[0][1])
+                        console.log(row, posChoice)
                     }
                 })
             }
-            choice : 
-            for (i = 1; i <= 9; i++){
-                posChoice = Math.floor(Math.random() * 9)
-                if ( gameBoard[posChoice] === undefined ) {
-                    const getPlayer = player.currentPlayer()
-                    makeMove(getPlayer, posChoice)
-                    displayController.toggle()
-                    break choice
-                }}
+            if(!posChoice && posChoice !== 0){
+                choice : 
+                for (i = 1; i <= 9; i++){
+                    posChoice = Math.floor(Math.random() * 9)
+                    if ( gameBoard[posChoice] === undefined ) {
+                        break choice
+                    }}
+            }
+            makeMove(getPlayer, posChoice)
+            displayController.toggle()
         },1000)
     }
 
@@ -45,25 +55,25 @@ const game = (function() {
     }
 
     const isGameOver = function(){
-        threes = [[gameBoard[0], gameBoard[1], gameBoard[2]],
-                  [gameBoard[3], gameBoard[4], gameBoard[5]],
-                  [gameBoard[6], gameBoard[7], gameBoard[8]],
-                  [gameBoard[0], gameBoard[3], gameBoard[6]],
-                  [gameBoard[1], gameBoard[4], gameBoard[7]],
-                  [gameBoard[2], gameBoard[5], gameBoard[8]],
-                  [gameBoard[0], gameBoard[4], gameBoard[8]],
-                  [gameBoard[2], gameBoard[4], gameBoard[6]],
-                  ];
+        threes = {r012  :[gameBoard[0], gameBoard[1], gameBoard[2]],
+                  r345  :[gameBoard[3], gameBoard[4], gameBoard[5]],
+                  r678  :[gameBoard[6], gameBoard[7], gameBoard[8]],
+                  r036  :[gameBoard[0], gameBoard[3], gameBoard[6]],
+                  r147  :[gameBoard[1], gameBoard[4], gameBoard[7]],
+                  r258  :[gameBoard[2], gameBoard[5], gameBoard[8]],
+                  r048  :[gameBoard[0], gameBoard[4], gameBoard[8]],
+                  r246  :[gameBoard[2], gameBoard[4], gameBoard[6]],
+        };
         
         let result;
         // Check for win  
-        threes.forEach(row => {
+        Object.values(threes).forEach(row => {
             if (row[0] != undefined && row[0] === row[1] && row[1] === row[2]){
                 result = `${row[0]} Wins`
             }
         })
         // Check for draw
-        if(threes.every(row => {
+        if(Object.values(threes).every(row => {
             return row[0] != row[1] && row[0] != undefined && row[1] != undefined || 
                    row[0] != row[2] && row[0] != undefined && row[2] != undefined || 
                    row[1] != row[2] && row[1] != undefined && row[2] != undefined
@@ -80,6 +90,7 @@ const game = (function() {
 
     const start = function() {
         gameBoard = []
+        threes = {}
         displayController.update(gameBoard)
         displayController.toggle()
         player.currentPlayer()
@@ -156,6 +167,7 @@ const displayController = (function() {
     const h1 = document.querySelector('.startScreen h1')
     const btnX = document.querySelector('button#btnX')
     const btnO = document.querySelector('button#btnO')
+    const aiSwitch = document.querySelector('input#hard')
     const toggleMenu = function() {
         startScreen.classList.toggle('active')
         board.classList.toggle('blur')
@@ -171,6 +183,10 @@ const displayController = (function() {
         toggleMenu();
         game.start()
         game.compMove();
+    })
+
+    aiSwitch.addEventListener('change', (e) => {
+        hardSwitch = e.target.checked
     })
 
     const gameOverScreen = function(result) {      
