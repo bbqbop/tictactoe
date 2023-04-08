@@ -7,17 +7,16 @@ const game = (function() {
     let gameBoard = []
     let threes;
 
-    const makeMove = function(curPlayer, pos) {
+    const makeMove = function(pos) {
         if(gameBoard[pos]) {
-            player.currentPlayer()
             return;
         }
+        curPlayer = player.currentPlayer()
         gameBoard[pos] = curPlayer;
+        finishMove(pos)
         if (curPlayer != comp){
-            console.log('a')
             compMove()
         }
-        finishMove(pos)
     }
 
     const AI = function(row, XO){
@@ -41,7 +40,6 @@ const game = (function() {
     const compMove = function() {
         if(gameOver) return
         displayController.toggle()
-        player.currentPlayer()
         let posChoice;
         // AI-Logic :
         if(Object.keys(threes).length > 0 && hardSwitch){
@@ -52,13 +50,13 @@ const game = (function() {
                 Object.entries(threes).forEach((row) => {
                     testChoice = AI(row, comp)
                     posChoice = testChoice >= 0 ? testChoice : posChoice
-                    // console.log('a', posChoice)
+                    console.log('a', posChoice)
                 })
                 if(!(posChoice >= 0)){
                     Object.entries(threes).forEach(row => {
                         testChoice = AI(row, user)
                         posChoice = testChoice >= 0 ? testChoice : posChoice 
-                        // console.log('b', posChoice)
+                        console.log('b', posChoice)
                     })
                 }
                 }
@@ -69,13 +67,13 @@ const game = (function() {
             for (i = 1; i <= 9; i++){
                 posChoice = Math.floor(Math.random() * 9)
                 if ( gameBoard[posChoice] === undefined ) {
-                    // console.log('c', posChoice)
+                    console.log('c', posChoice)
                     break choice
                 }}
         }
         setTimeout( ()=> {
-            // console.log('d', posChoice)
-            makeMove(comp, posChoice)
+            console.log('d', posChoice)
+            makeMove(posChoice)
             displayController.toggle()
         },1000)
     }
