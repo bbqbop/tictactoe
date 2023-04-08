@@ -1,5 +1,7 @@
 let gameOver = true;
 let hardSwitch;
+let user;
+let comp;
 
 const game = (function() {
     let gameBoard = []
@@ -11,40 +13,69 @@ const game = (function() {
             return;
         }
         gameBoard[pos] = curPlayer;
+        if (curPlayer != comp){
+            console.log('a')
+            compMove()
+        }
         finishMove(pos)
+    }
+
+    const AI = function(row, XO){
+        if(row[1][0] === XO && row[1][0] === row[1][1] && row[1][2] === undefined && row[1][0] !== undefined && row[1][1] !== undefined){
+            choice = parseInt(row[0][3])
+            // console.log(row, choice, XO)
+            return choice
+        }
+        if(row[1][0] === XO && row[1][0] === row[1][2] && row[1][1] === undefined && row[1][0] !== undefined && row[1][2] !== undefined){
+            choice = parseInt(row[0][2])
+            // console.log(row, choice, XO)
+            return choice
+        }
+        if(row[1][1] === XO && row[1][1] === row[1][2] && row[1][0] === undefined && row[1][1] !== undefined && row[1][2] !== undefined){
+            choice = parseInt(row[0][1])
+            // console.log(row, choice, XO)
+            return choice
+        }
     }
 
     const compMove = function() {
         if(gameOver) return
         displayController.toggle()
-        const getPlayer = player.currentPlayer()
+        player.currentPlayer()
         let posChoice;
-        setTimeout( ()=> {
-            if(threes && hardSwitch){
-                Object.entries(threes).forEach(row => {
-                    if(row[1][0] === row[1][1] && row[1][2] === undefined && row[1][0] !== undefined && row[1][1] !== undefined){
-                        posChoice = parseInt(row[0][3])
-                        console.log(row, posChoice)
-                    }
-                    if(row[1][0] === row[1][2] && row[1][1] === undefined && row[1][0] !== undefined && row[1][2] !== undefined){
-                        posChoice = parseInt(row[0][2])
-                        console.log(row, posChoice)
-                    }
-                    if(row[1][1] === row[1][2] && row[1][0] === undefined && row[1][1] !== undefined && row[1][2] !== undefined){
-                        posChoice = parseInt(row[0][1])
-                        console.log(row, posChoice)
-                    }
+        // AI-Logic :
+        if(Object.keys(threes).length > 0 && hardSwitch){
+            if(gameBoard[4] === undefined) {
+                posChoice = 4
+            }
+                else{
+                Object.entries(threes).forEach((row) => {
+                    testChoice = AI(row, comp)
+                    posChoice = testChoice >= 0 ? testChoice : posChoice
+                    // console.log('a', posChoice)
                 })
-            }
-            if(!posChoice && posChoice !== 0){
-                choice : 
-                for (i = 1; i <= 9; i++){
-                    posChoice = Math.floor(Math.random() * 9)
-                    if ( gameBoard[posChoice] === undefined ) {
-                        break choice
-                    }}
-            }
-            makeMove(getPlayer, posChoice)
+                if(!(posChoice >= 0)){
+                    Object.entries(threes).forEach(row => {
+                        testChoice = AI(row, user)
+                        posChoice = testChoice >= 0 ? testChoice : posChoice 
+                        // console.log('b', posChoice)
+                    })
+                }
+                }
+        }
+        // Random computer choice
+        if(!(posChoice >= 0)){
+            choice : 
+            for (i = 1; i <= 9; i++){
+                posChoice = Math.floor(Math.random() * 9)
+                if ( gameBoard[posChoice] === undefined ) {
+                    // console.log('c', posChoice)
+                    break choice
+                }}
+        }
+        setTimeout( ()=> {
+            // console.log('d', posChoice)
+            makeMove(comp, posChoice)
             displayController.toggle()
         },1000)
     }
@@ -133,10 +164,8 @@ const displayController = (function() {
     let fieldSwitch = false;
 
     function atClick(event) {
-        const getPlayer = player.currentPlayer()
         const pos = parseInt(event.target.className[5])
-        game.makeMove(getPlayer, pos)
-        game.compMove()
+        game.makeMove(pos)
     }
 
     const update = function(gameBoard, lastPos) {
@@ -176,10 +205,14 @@ const displayController = (function() {
     toggleMenu();
 
     btnX.addEventListener('click', ()=> {
+        user = 'X'
+        comp = 'O';
         toggleMenu();
         game.start()
     })
     btnO.addEventListener('click', () => {
+        user = 'O'
+        comp = 'X'; 
         toggleMenu();
         game.start()
         game.compMove();
