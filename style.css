@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;900&display=swap');
 
-
 * {
     box-sizing: border-box;
     --blue: #2196F3;
@@ -191,15 +190,28 @@ div.field2, div.field5, div.field8 {
     border-radius: 50%;
   }
 
-  .footer {
+  .footer .sign {
     position: absolute;
-    bottom: -1.5rem;
+    bottom: -2.5rem;
     left: calc(50% - calc(375px/2));
     opacity: 0.3;
     color: #ccc;
     transition: all 400ms;
   }
 
-  .footer:hover {
+  .footer .sign:hover {
+    color: var(--blue);
+  }
+
+  .footer .stats {
+    position: absolute;
+    bottom: -2.5rem;
+    right : calc(50% - calc(375px/2));
+    opacity: 0.3;
+    color: #ccc;
+    transition: all 400ms;
+  }
+
+  .footer .stats:hover {
     color: var(--blue);
   }

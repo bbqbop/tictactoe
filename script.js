@@ -231,8 +231,28 @@ const displayController = (function() {
 
     const gameOverScreen = function(result) {      
         h1.textContent = result;
+        wurst(result[0])
         toggleMenu()
     } 
+
+    const pStats = document.querySelector('p.stats')
+    const stats = {
+        win: 0,
+        lose: 0,
+        draw: 0
+    }
+    const wurst = function(result){
+        if (result === user) { 
+            stats.win++
+        }
+        else if (result === comp) {
+            stats.lose++
+        }
+        else {
+            stats.draw++
+        }
+        pStats.textContent = `win ${stats.win} lose ${stats.lose} draw ${stats.draw}`;
+    }
 
     return {
         update,
