@@ -2,6 +2,7 @@ let gameOver = true;
 
 const game = (function() {
     let gameBoard = []
+    let threes;
 
     const makeMove = function(curPlayer, pos) {
         if(gameBoard[pos]) {
@@ -14,12 +15,21 @@ const game = (function() {
 
     const compMove = function() {
         if(gameOver) return
-
         displayController.toggle()
+        let posChoice;
         setTimeout( ()=> {
+            if(threes){
+                threes.forEach(row => {
+                    if(row[0] === row[1] && row[0] !== undefined && row[1] !== undefined){
+                        posChoice = row[2]
+                        console.log(row[2])
+                        return
+                    }
+                })
+            }
             choice : 
             for (i = 1; i <= 9; i++){
-                const posChoice = Math.floor(Math.random() * 9)
+                posChoice = Math.floor(Math.random() * 9)
                 if ( gameBoard[posChoice] === undefined ) {
                     const getPlayer = player.currentPlayer()
                     makeMove(getPlayer, posChoice)
@@ -35,15 +45,16 @@ const game = (function() {
     }
 
     const isGameOver = function(){
-        const threes = [[gameBoard[0], gameBoard[1], gameBoard[2]],
-                        [gameBoard[3], gameBoard[4], gameBoard[5]],
-                        [gameBoard[6], gameBoard[7], gameBoard[8]],
-                        [gameBoard[0], gameBoard[3], gameBoard[6]],
-                        [gameBoard[1], gameBoard[4], gameBoard[7]],
-                        [gameBoard[2], gameBoard[5], gameBoard[8]],
-                        [gameBoard[0], gameBoard[4], gameBoard[8]],
-                        [gameBoard[2], gameBoard[4], gameBoard[6]],
-                        ];
+        threes = [[gameBoard[0], gameBoard[1], gameBoard[2]],
+                  [gameBoard[3], gameBoard[4], gameBoard[5]],
+                  [gameBoard[6], gameBoard[7], gameBoard[8]],
+                  [gameBoard[0], gameBoard[3], gameBoard[6]],
+                  [gameBoard[1], gameBoard[4], gameBoard[7]],
+                  [gameBoard[2], gameBoard[5], gameBoard[8]],
+                  [gameBoard[0], gameBoard[4], gameBoard[8]],
+                  [gameBoard[2], gameBoard[4], gameBoard[6]],
+                  ];
+        
         let result;
         // Check for win  
         threes.forEach(row => {
