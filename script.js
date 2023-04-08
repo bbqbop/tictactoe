@@ -45,18 +45,19 @@ const game = (function() {
         if(Object.keys(threes).length > 0 && hardSwitch){
             if(gameBoard[4] === undefined) {
                 posChoice = 4
+                // console.log('a', posChoice)
             }
                 else{
                 Object.entries(threes).forEach((row) => {
                     testChoice = AI(row, comp)
                     posChoice = testChoice >= 0 ? testChoice : posChoice
-                    console.log('a', posChoice)
+                    // console.log('b', posChoice)
                 })
                 if(!(posChoice >= 0)){
                     Object.entries(threes).forEach(row => {
                         testChoice = AI(row, user)
                         posChoice = testChoice >= 0 ? testChoice : posChoice 
-                        console.log('b', posChoice)
+                        // console.log('c', posChoice)
                     })
                 }
                 }
@@ -67,12 +68,12 @@ const game = (function() {
             for (i = 1; i <= 9; i++){
                 posChoice = Math.floor(Math.random() * 9)
                 if ( gameBoard[posChoice] === undefined ) {
-                    console.log('c', posChoice)
+                    // console.log('d', posChoice)
                     break choice
                 }}
         }
         setTimeout( ()=> {
-            console.log('d', posChoice)
+            // console.log('e', posChoice)
             makeMove(posChoice)
             displayController.toggle()
         },1000)
@@ -194,7 +195,7 @@ const displayController = (function() {
     const h1 = document.querySelector('.startScreen h1')
     const btnX = document.querySelector('button#btnX')
     const btnO = document.querySelector('button#btnO')
-    const aiSwitch = document.querySelector('input#hard')
+    const aiSwitch = document.querySelector('.switch input')
     const toggleMenu = function() {
         startScreen.classList.toggle('active')
         board.classList.toggle('blur')
