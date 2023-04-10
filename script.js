@@ -125,16 +125,16 @@ const game = (function() {
         displayController.toggle()
         player.currentPlayer()
         gameOver = false
+        if(comp === 'X'){
+            compMove();
+        }
     }
 
     return {
         makeMove,
-        compMove,
         start
         }
 })();
-
-
 
 const player = (function(){
     let playerSwitch = true;
@@ -146,8 +146,6 @@ const player = (function(){
     }
     return {currentPlayer}
 })()
-
-
 
 const displayController = (function() {
     const board = document.querySelector('.gameBoard');
@@ -222,7 +220,6 @@ const displayController = (function() {
         comp = 'X'; 
         toggleMenu();
         game.start()
-        game.compMove();
     })
 
     aiSwitch.addEventListener('change', (e) => {
